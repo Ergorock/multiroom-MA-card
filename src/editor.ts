@@ -1,5 +1,5 @@
 import { LitElement, html, nothing } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { property, state } from "lit/decorators.js";
 import type { HomeAssistant, MultiroomCardConfig } from "./types";
 
 const SCHEMA = [
@@ -59,7 +59,6 @@ const LABELS: Record<string, string> = {
   config_entry_id: "Instance Music Assistant (vide = automatique)",
 };
 
-@customElement("multiroom-ma-card-editor")
 export class MultiroomCardEditor extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
   @state() private _config?: MultiroomCardConfig;
@@ -88,3 +87,5 @@ export class MultiroomCardEditor extends LitElement {
     this.dispatchEvent(new CustomEvent("config-changed", { detail: { config }, bubbles: true, composed: true }));
   }
 }
+
+if (!customElements.get("multiroom-ma-card-editor")) customElements.define("multiroom-ma-card-editor", MultiroomCardEditor);

@@ -13,7 +13,7 @@ typeof SuppressedError === "function" ? SuppressedError : function(error, suppre
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
-const t$2 = globalThis, e$2 = t$2.ShadowRoot && (void 0 === t$2.ShadyCSS || t$2.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, s$2 = Symbol(), o$4 = new WeakMap;
+const t$1 = globalThis, e$2 = t$1.ShadowRoot && (void 0 === t$1.ShadyCSS || t$1.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, s$2 = Symbol(), o$4 = new WeakMap;
 
 let n$3 = class n {
     constructor(t, e, o) {
@@ -44,7 +44,7 @@ const r$4 = t => new n$3("string" == typeof t ? t : t + "", void 0, s$2), i$3 = 
     return new n$3(o, t, s$2);
 }, S$1 = (s, o) => {
     if (e$2) s.adoptedStyleSheets = o.map(t => t instanceof CSSStyleSheet ? t : t.styleSheet); else for (const e of o) {
-        const o = document.createElement("style"), n = t$2.litNonce;
+        const o = document.createElement("style"), n = t$1.litNonce;
         void 0 !== n && o.setAttribute("nonce", n), o.textContent = e.cssText, s.appendChild(o);
     }
 }, c$2 = e$2 ? t => t : t => t instanceof CSSStyleSheet ? (t => {
@@ -298,7 +298,7 @@ y$1.elementStyles = [], y$1.shadowRootOptions = {
     ReactiveElement: y$1
 }), (a$1.reactiveElementVersions ??= []).push("2.1.2");
 
-const t$1 = globalThis, i$1 = t => t, s$1 = t$1.trustedTypes, e = s$1 ? s$1.createPolicy("lit-html", {
+const t = globalThis, i$1 = t => t, s$1 = t.trustedTypes, e = s$1 ? s$1.createPolicy("lit-html", {
     createHTML: t => t
 }) : void 0, h = "$lit$", o$2 = `lit$${Math.random().toFixed(9).slice(2)}$`, n$1 = "?" + o$2, r$2 = `<${n$1}>`, l = document, c = () => l.createComment(""), a = t => null === t || "object" != typeof t && "function" != typeof t, u = Array.isArray, d = t => u(t) || "function" == typeof t?.[Symbol.iterator], f = "[ \t\n\f\r]", v = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, _ = /-->/g, m = />/g, p = RegExp(`>|${f}(?:([^\\s"'>=/]+)(${f}*=${f}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"), g = /'/g, $ = /"/g, y = /^(?:script|style|textarea|title)$/i, x = t => (i, ...s) => ({
     _$litType$: t,
@@ -562,9 +562,9 @@ class Z {
     }
 }
 
-const B = t$1.litHtmlPolyfillSupport;
+const B = t.litHtmlPolyfillSupport;
 
-B?.(S, k), (t$1.litHtmlVersions ??= []).push("3.3.3");
+B?.(S, k), (t.litHtmlVersions ??= []).push("3.3.3");
 
 const D = (t, i, s) => {
     const e = s?.renderBefore ?? i;
@@ -615,12 +615,6 @@ o$1?.({
 });
 
 (s.litElementVersions ??= []).push("4.2.2");
-
-const t = t => (e, o) => {
-    void 0 !== o ? o.addInitializer(() => {
-        customElements.define(t, e);
-    }) : customElements.define(t, e);
-};
 
 const o = {
     attribute: true,
@@ -1642,7 +1636,7 @@ const LABELS = {
     config_entry_id: "Instance Music Assistant (vide = automatique)"
 };
 
-let MultiroomCardEditor = class MultiroomCardEditor extends i {
+class MultiroomCardEditor extends i {
     setConfig(config) {
         this._config = config;
     }
@@ -1672,7 +1666,7 @@ let MultiroomCardEditor = class MultiroomCardEditor extends i {
             composed: true
         }));
     }
-};
+}
 
 __decorate([ n({
     attribute: false
@@ -1680,7 +1674,7 @@ __decorate([ n({
 
 __decorate([ r() ], MultiroomCardEditor.prototype, "_config", void 0);
 
-MultiroomCardEditor = __decorate([ t("multiroom-ma-card-editor") ], MultiroomCardEditor);
+if (!customElements.get("multiroom-ma-card-editor")) customElements.define("multiroom-ma-card-editor", MultiroomCardEditor);
 
 const VERSION = "0.5.0";
 
@@ -1762,7 +1756,7 @@ const STATE_LABELS = {
     unknown: "Inconnu"
 };
 
-let MultiroomCard = class MultiroomCard extends i {
+class MultiroomCard extends i {
     constructor() {
         super(...arguments);
         this._tab = "speakers";
@@ -2681,7 +2675,7 @@ let MultiroomCard = class MultiroomCard extends i {
       </div>
     `;
     }
-};
+}
 
 MultiroomCard.styles = cardStyles;
 
@@ -2741,16 +2735,18 @@ __decorate([ r() ], MultiroomCard.prototype, "_queueLoading", void 0);
 
 __decorate([ r() ], MultiroomCard.prototype, "_queueAfter", void 0);
 
-MultiroomCard = __decorate([ t("multiroom-ma-card") ], MultiroomCard);
+if (!customElements.get("multiroom-ma-card")) customElements.define("multiroom-ma-card", MultiroomCard);
 
 window.customCards = window.customCards ?? [];
 
-window.customCards.push({
-    type: "multiroom-ma-card",
-    name: "Multiroom MA Card",
-    description: "Gérer, grouper et alimenter les enceintes Music Assistant.",
-    preview: false
-});
+if (!window.customCards.some(c => c.type === "multiroom-ma-card")) {
+    window.customCards.push({
+        type: "multiroom-ma-card",
+        name: "Multiroom MA Card",
+        description: "Gérer, grouper et alimenter les enceintes Music Assistant.",
+        preview: false
+    });
+}
 
 console.info(`%c MULTIROOM-MA-CARD %c v${VERSION} `, "color:#fff;background:#03a9f4", "color:#03a9f4");
 

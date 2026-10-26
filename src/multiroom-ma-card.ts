@@ -1,5 +1,5 @@
 import { LitElement, html, nothing, type PropertyValues, type TemplateResult } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { property, state } from "lit/decorators.js";
 import { cardStyles } from "./styles";
 import {
   computeGroups,
@@ -86,7 +86,6 @@ const STATE_LABELS: Record<string, string> = {
   unknown: "Inconnu",
 };
 
-@customElement("multiroom-ma-card")
 export class MultiroomCard extends LitElement {
   static styles = cardStyles;
 
@@ -1194,12 +1193,16 @@ declare global {
   }
 }
 
+if (!customElements.get("multiroom-ma-card")) customElements.define("multiroom-ma-card", MultiroomCard);
+
 window.customCards = window.customCards ?? [];
-window.customCards.push({
-  type: "multiroom-ma-card",
-  name: "Multiroom MA Card",
-  description: "Gérer, grouper et alimenter les enceintes Music Assistant.",
-  preview: false,
-});
+if (!window.customCards.some((c) => c.type === "multiroom-ma-card")) {
+  window.customCards.push({
+    type: "multiroom-ma-card",
+    name: "Multiroom MA Card",
+    description: "Gérer, grouper et alimenter les enceintes Music Assistant.",
+    preview: false,
+  });
+}
 
 console.info(`%c MULTIROOM-MA-CARD %c v${VERSION} `, "color:#fff;background:#03a9f4", "color:#03a9f4");
