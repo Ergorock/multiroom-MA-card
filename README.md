@@ -1,93 +1,98 @@
 # Multiroom MA Card
 
-Une carte Lovelace pour piloter des enceintes multiroom via [Music Assistant](https://music-assistant.io/).
+*[Version française](README.fr.md)*
 
-- **Enceintes** : voir toutes les enceintes et ce qu'elles jouent, régler le volume (par enceinte ou pour tout le groupe), couper le son.
-- **Groupes** : ajouter ou retirer des enceintes d'un groupe, dissoudre un groupe, tout grouper ou tout dégrouper en un clic.
-- **File de lecture** : voir la file de l'enceinte active (titre en cours, titres passés et à venir), lire un titre, le faire passer ensuite ou le retirer. Nécessite l'intégration HACS [Music Assistant Queue Actions](https://github.com/droans/mass_queue) (`mass_queue`).
-- **Transfert** : déplacer la file de lecture (et le morceau en cours) d'une enceinte ou d'un groupe vers une autre.
-- **Favoris** : parcourir les playlists, albums, artistes, radios et titres favoris de Music Assistant.
-- **Recherche** : chercher dans toutes les sources connectées à Music Assistant.
-- Lecture immédiate, « lire ensuite » ou « ajouter à la file » sur l'enceinte (ou le groupe) active.
-- **Annonces** : diffuser un message vocal sur une sélection d'enceintes (ou « Partout »), avec des annonces enregistrées réutilisables ; la musique reprend ensuite.
+A Lovelace card to control multiroom speakers through [Music Assistant](https://music-assistant.io/).
+
+- **Speakers**: see every speaker and what it is playing, set the volume (per speaker or for the whole group), mute.
+- **Groups**: add or remove speakers from a group, dissolve a group, group or ungroup everything in one click.
+- **Play queue**: see the active speaker's queue (current track, past and upcoming tracks), play a track, play it next or remove it. Requires the [Music Assistant Queue Actions](https://github.com/droans/mass_queue) HACS integration (`mass_queue`).
+- **Transfer**: move the play queue (and the current track) from one speaker or group to another.
+- **Favorites**: browse Music Assistant's favorite playlists, albums, artists, radios and tracks.
+- **Search**: search all the sources connected to Music Assistant.
+- Play now, “play next” or “add to queue” on the active speaker (or group).
+- **Announcements**: broadcast a voice message to a selection of speakers (or “Everywhere”), with reusable saved announcements; the music resumes afterwards.
+- Interface in English and French (follows the Home Assistant language).
 
 ## Installation
 
-### HACS (dépôt personnalisé)
+### HACS (custom repository)
 
-1. HACS → menu ⋮ → *Dépôts personnalisés* → ajoutez `https://github.com/Ergorock/multiroom-MA-card`, catégorie **Dashboard**.
-2. Installez **Multiroom MA Card**, puis rechargez le navigateur.
+1. HACS → ⋮ menu → *Custom repositories* → add `https://github.com/Ergorock/multiroom-MA-card`, category **Dashboard**.
+2. Install **Multiroom MA Card**, then reload your browser.
 
-### Manuelle
+### Manual
 
-1. Lancez `npm install` puis `npm run build`.
-2. Copiez `dist/multiroom-ma-card.js` dans `config/www/multiroom-ma-card.js`.
-3. *Paramètres → Tableaux de bord → ⋮ → Ressources* : ajoutez `/local/multiroom-ma-card.js` (type *Module JavaScript*).
+1. Run `npm install` then `npm run build`.
+2. Copy `dist/multiroom-ma-card.js` to `config/www/multiroom-ma-card.js`.
+3. *Settings → Dashboards → ⋮ → Resources*: add `/local/multiroom-ma-card.js` (type *JavaScript module*).
 
 ## Configuration
 
-La carte s'ajoute depuis l'éditeur visuel (« Multiroom MA Card »). Sans configuration, elle trouve d'elle-même toutes les enceintes Music Assistant.
+Add the card from the visual editor (“Multiroom MA Card”). With no configuration, it finds every Music Assistant speaker by itself.
 
 ```yaml
 type: custom:multiroom-ma-card
 title: Multiroom
-entities:            # facultatif, sinon toutes les enceintes Music Assistant
+entities:            # optional, otherwise every Music Assistant speaker
   - media_player.beam
   - media_player.era_100
-  - media_player.pallier_2
+  - media_player.landing
   - media_player.play
 favorite_types: [playlist, album, artist, radio, track]
 default_tab: speakers    # speakers | queue | favorites | search | announce
 show_unavailable: false
-config_entry_id: 01KK…   # facultatif, voir plus bas
-tts_engine: tts.google_translate_fr_com   # facultatif, sinon premier moteur tts.*
-announce_volume: 35      # volume d'annonce par défaut (0-100)
-announcements:           # annonces fixes, en plus de celles enregistrées depuis la carte
-  - name: À table
-    message: À table, le repas est prêt !
+config_entry_id: 01KK…   # optional, see below
+tts_engine: tts.google_translate_en_com   # optional, otherwise the first tts.* engine
+announce_volume: 35      # default announcement volume (0-100)
+announcements:           # fixed announcements, in addition to the ones saved from the card
+  - name: Dinner
+    message: Dinner is ready!
     icon: mdi:silverware-fork-knife
 ```
 
-| Option | Description | Défaut |
+| Option | Description | Default |
 | --- | --- | --- |
-| `title` | Titre de la carte | — |
-| `entities` | Lecteurs `media_player` de Music Assistant à afficher | détection automatique |
-| `favorite_types` | Types de favoris proposés (`playlist`, `album`, `artist`, `track`, `radio`, `podcast`, `audiobook`) | playlist, album, artist, radio, track |
-| `default_tab` | Onglet ouvert au chargement | `speakers` |
-| `show_unavailable` | Afficher les enceintes indisponibles | `false` |
-| `config_entry_id` | Instance Music Assistant | détection automatique |
-| `tts_engine` | Moteur de synthèse vocale des annonces | premier `tts.*` trouvé |
-| `announce_volume` | Volume d'annonce par défaut (0-100) ; le réglage fait depuis la carte prime | volume inchangé |
-| `announcements` | Annonces fixes (`name`, `message`, `icon`) | — |
+| `title` | Card title | — |
+| `entities` | Music Assistant `media_player` players to show | automatic discovery |
+| `favorite_types` | Favorite types offered (`playlist`, `album`, `artist`, `track`, `radio`, `podcast`, `audiobook`) | playlist, album, artist, radio, track |
+| `default_tab` | Tab open on load | `speakers` |
+| `show_unavailable` | Show unavailable speakers | `false` |
+| `config_entry_id` | Music Assistant instance | automatic discovery |
+| `tts_engine` | Text-to-speech engine for announcements | first `tts.*` found |
+| `announce_volume` | Default announcement volume (0-100); the setting made from the card takes precedence | volume unchanged |
+| `announcements` | Fixed announcements (`name`, `message`, `icon`) | — |
 
-> La détection automatique de l'instance Music Assistant demande un compte **administrateur**. Pour les autres comptes, renseignez `config_entry_id` (choisissez l'instance dans l'éditeur visuel).
+> Automatic discovery of the Music Assistant instance requires an **administrator** account. For other accounts, set `config_entry_id` (pick the instance in the visual editor).
 
-## Utilisation
+## Usage
 
-- **Enceinte active** : un clic sur l'en-tête d'un groupe le désigne comme cible. Le bandeau du haut, les favoris et la recherche jouent sur cette enceinte (ou ce groupe).
-- **Grouper** : le bouton <kbd>enceintes</kbd> d'un groupe ouvre la liste des autres enceintes. Cochez ou décochez-les, puis cliquez sur *Appliquer*.
-- **File** : l'onglet *File* suit l'enceinte active et se recharge à chaque changement de titre. Un appui sur un titre le lit ; « Lire ensuite » le place juste après le titre en cours ; ✕ le retire. « Afficher plus » charge 50 titres de plus (jusqu'à 1000).
-- **Transférer** : le bouton ⇥ d'un groupe qui a une file chargée propose les autres enceintes ; un clic y déplace la file et relance la lecture.
-- **Annoncer** : dans l'onglet *Annonces*, choisissez les enceintes, puis ▶ sur une annonce enregistrée ou tapez un message et « Annoncer » (Ctrl+Entrée). Un clic sur une annonce remplit le message ; « Enregistrer » l'ajoute aux annonces. Les annonces enregistrées, la sélection et le volume sont propres à chaque utilisateur et suivis d'un appareil à l'autre ; ceux de la carte Annonce sont repris au premier usage. Cliquer sur la valeur du volume repasse en « inchangé ».
-- **Retirer** une enceinte : bouton ✕ sur sa ligne. **Dissoudre** un groupe : bouton « maillon barré ».
-- **Volume du groupe** : décale le volume de chaque enceinte du même écart, en gardant leurs différences.
+- **Active speaker**: a click on a group's header makes it the target. The top banner, favorites and search play on this speaker (or group).
+- **Group**: a group's <kbd>speakers</kbd> button opens the list of the other speakers. Check or uncheck them, then click *Apply*.
+- **Queue**: the *Queue* tab follows the active speaker and reloads on every track change. Tapping a track plays it; “Play next” puts it right after the current track; ✕ removes it. “Show more” loads 50 more tracks (up to 1000).
+- **Transfer**: the ⇥ button of a group with a loaded queue offers the other speakers; a click moves the queue there and resumes playback.
+- **Announce**: in the *Announcements* tab, choose the speakers, then ▶ on a saved announcement, or type a message and “Announce” (Ctrl+Enter). A click on an announcement fills in the message; “Save” adds it to the announcements. Saved announcements, the selection and the volume belong to each user and follow them across devices; those of the Customizable TTS Card are picked up on first use. Clicking the volume value switches back to “unchanged”.
+- **Remove** a speaker: ✕ button on its row. **Dissolve** a group: the “broken link” button.
+- **Group volume**: shifts each speaker's volume by the same amount, keeping their differences.
 
-## Développement
+## Development
 
 ```bash
 npm install
-npm run watch      # rebuild en continu
-node demo/serve.mjs  # démo avec un Home Assistant simulé sur http://localhost:5173
+npm run watch      # continuous rebuild
+node demo/serve.mjs  # demo with a mock Home Assistant on http://localhost:5173
 ```
 
-La carte appelle les services `music_assistant.get_library`, `music_assistant.search`, `music_assistant.play_media`, `music_assistant.transfer_queue` et `music_assistant.play_announcement`, ainsi que `media_player.join`, `media_player.unjoin` et `media_player.volume_set`.
+The card calls the `music_assistant.get_library`, `music_assistant.search`, `music_assistant.play_media`, `music_assistant.transfer_queue` and `music_assistant.play_announcement` services, as well as `media_player.join`, `media_player.unjoin` and `media_player.volume_set`.
 
-Pour la file de lecture : `music_assistant.get_queue`, et `mass_queue.get_queue_items`, `play_queue_item`, `move_queue_item_next`, `remove_queue_item`.
+For the play queue: `music_assistant.get_queue`, and `mass_queue.get_queue_items`, `play_queue_item`, `move_queue_item_next`, `remove_queue_item`.
 
-### Mise à jour de la ressource inline
+Interface texts live in `src/i18n.ts` (English and French).
 
-Le build n'est pas minifié et reste indenté : d'une version à l'autre, seules les lignes modifiées changent. Pour mettre à jour une ressource enregistrée en ligne (`data:`) sans renvoyer tout le fichier :
+### Updating the inline resource
 
-1. `npm run build`, puis `node scripts/make-patch.mjs` : compare `dist/multiroom-ma-card.js` à `.deploy/deployed.js` (copie de la version déployée) et écrit `.deploy/patch.json`.
-2. Dans une page Home Assistant ouverte avec un compte administrateur, exécuter `scripts/apply-patch.browser.js` en y collant le contenu de `patch.json`. Le script refuse d'écrire si la version déployée ou le résultat ne correspondent pas aux sommes CRC32 attendues.
-3. Copier `dist/multiroom-ma-card.js` vers `.deploy/deployed.js`.
+The build is not minified and stays indented: from one version to the next, only the changed lines differ. To update a resource stored inline (`data:`) without resending the whole file:
+
+1. `npm run build`, then `node scripts/make-patch.mjs`: compares `dist/multiroom-ma-card.js` with `.deploy/deployed.js` (copy of the deployed version) and writes `.deploy/patch.json`.
+2. In a Home Assistant page opened with an administrator account, run `scripts/apply-patch.browser.js` after pasting the content of `patch.json` into it. The script refuses to write if the deployed version or the result don't match the expected CRC32 checksums.
+3. Copy `dist/multiroom-ma-card.js` to `.deploy/deployed.js`.

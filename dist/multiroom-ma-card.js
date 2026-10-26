@@ -1526,7 +1526,245 @@ function playAnnouncement(hass, entities, message, ttsEngine, volume) {
     return hass.callService("music_assistant", "play_announcement", data);
 }
 
-const SCHEMA = [ {
+const en = {
+    card_description: "Manage, group and feed your Music Assistant speakers.",
+    invalid_config: "Invalid configuration",
+    no_config_entry: "Music Assistant config entry not found: set config_entry_id.",
+    error: "Error: {error}",
+    transferred: "Playback transferred to {target}",
+    group_updated: "Group updated",
+    all_grouped: "All speakers grouped",
+    ungrouped: "Speakers ungrouped",
+    favorites_failed: "Could not load favorites: {error}",
+    search_failed: "Search failed: {error}",
+    no_speaker_available: "No speaker available",
+    enqueue_play: "Playing",
+    enqueue_next: "Playing next",
+    enqueue_add: "Added to queue",
+    launching: "Starting: {name}…",
+    played: "{action}: {name} · {target}",
+    queue_failed: "Could not read the queue: {error}",
+    save_failed: "Could not save: {error}",
+    empty_message: "The message is empty",
+    select_speaker: "Select at least one speaker",
+    no_tts: "No text-to-speech engine configured",
+    sent_one: "Announcement sent to {n} speaker",
+    sent_other: "Announcement sent to {n} speakers",
+    write_first: "Write a message first",
+    preset_saved: "Announcement “{name}” saved",
+    tab_speakers: "Speakers",
+    tab_queue: "Queue",
+    tab_favorites: "Favorites",
+    tab_search: "Search",
+    tab_announce: "Announcements",
+    no_players: "No Music Assistant player found.",
+    previous: "Previous",
+    pause: "Pause",
+    play: "Play",
+    next: "Next",
+    group_all_on: "Group all on {name}",
+    ungroup_all: "Ungroup all",
+    choose_target: "Choose as active speaker",
+    active: "active",
+    transfer_title: "Transfer playback to another speaker",
+    edit_group: "Add / remove speakers",
+    ungroup: "Ungroup",
+    group_dissolved: "Group dissolved",
+    transfer_from: "Transfer playback from {name} to:",
+    no_other_speaker: "No other speaker available.",
+    cancel: "Cancel",
+    group: "Group",
+    unmute: "Unmute",
+    mute: "Mute",
+    remove_from_group: "Remove from group",
+    removed_from_group: "{name} removed from the group",
+    playing_with: "Speakers playing with {name}:",
+    apply: "Apply",
+    play_on: "Play on",
+    refresh: "Refresh",
+    loading: "Loading…",
+    no_favorites: "No favorites of this type.",
+    search_placeholder: "Artist, album, track, radio…",
+    all: "All",
+    search_hint: "Search all sources connected to Music Assistant.",
+    no_results: "No results for “{query}”.",
+    queue_needs: "Showing the queue requires the “Music Assistant Queue Actions” integration (mass_queue, via HACS).",
+    queue_empty: "Queue is empty.",
+    show_more: "Show more ({n} left)",
+    play_item: "Play {name}",
+    now_playing: "Playing: {name}",
+    play_next: "Play next",
+    will_play_next: "{name} will play next",
+    remove_from_queue: "Remove from queue",
+    removed_from_queue: "{name} removed from the queue",
+    everywhere: "Everywhere",
+    no_compatible: "No compatible speaker.",
+    saved_announcements: "Saved announcements",
+    play_now: "Play now",
+    delete: "Delete",
+    no_presets: "No announcements yet. Write a message, then “Save”.",
+    message: "Message",
+    message_placeholder: "Type your message…",
+    preset_name: "Announcement name",
+    volume: "Volume",
+    volume_unchanged_title: "Click to leave the speakers' volume unchanged",
+    unchanged: "unchanged",
+    save: "Save",
+    announce: "Announce",
+    add_to_queue: "Add to queue",
+    state_playing: "Playing",
+    state_paused: "Paused",
+    state_idle: "Idle",
+    state_off: "Off",
+    state_on: "On",
+    state_buffering: "Loading",
+    state_unavailable: "Unavailable",
+    state_unknown: "Unknown",
+    types_playlist: "Playlists",
+    types_album: "Albums",
+    types_artist: "Artists",
+    types_track: "Tracks",
+    types_radio: "Radios",
+    types_podcast: "Podcasts",
+    types_audiobook: "Audiobooks",
+    label_title: "Title",
+    label_entities: "Speakers (empty = all Music Assistant speakers)",
+    label_favorite_types: "Favorite types shown",
+    label_default_tab: "Default tab",
+    label_tts_engine: "Text-to-speech engine for announcements (empty = automatic)",
+    label_announce_volume: "Default announcement volume",
+    label_show_unavailable: "Show unavailable speakers",
+    label_config_entry_id: "Music Assistant instance (empty = automatic)",
+    queue_tab: "Play queue"
+};
+
+const fr = {
+    card_description: "Gérer, grouper et alimenter les enceintes Music Assistant.",
+    invalid_config: "Configuration invalide",
+    no_config_entry: "Config entry Music Assistant introuvable : renseignez config_entry_id.",
+    error: "Erreur : {error}",
+    transferred: "Lecture transférée vers {target}",
+    group_updated: "Groupe mis à jour",
+    all_grouped: "Toutes les enceintes groupées",
+    ungrouped: "Enceintes dégroupées",
+    favorites_failed: "Impossible de charger les favoris : {error}",
+    search_failed: "Recherche impossible : {error}",
+    no_speaker_available: "Aucune enceinte disponible",
+    enqueue_play: "Lecture",
+    enqueue_next: "Lu ensuite",
+    enqueue_add: "Ajouté à la file",
+    launching: "Lancement : {name}…",
+    played: "{action} : {name} · {target}",
+    queue_failed: "Impossible de lire la file : {error}",
+    save_failed: "Enregistrement impossible : {error}",
+    empty_message: "Le message est vide",
+    select_speaker: "Sélectionnez au moins une enceinte",
+    no_tts: "Aucun moteur de synthèse vocale configuré",
+    sent_one: "Annonce envoyée sur {n} enceinte",
+    sent_other: "Annonce envoyée sur {n} enceintes",
+    write_first: "Écrivez d'abord un message",
+    preset_saved: "Annonce « {name} » enregistrée",
+    tab_speakers: "Enceintes",
+    tab_queue: "File",
+    tab_favorites: "Favoris",
+    tab_search: "Recherche",
+    tab_announce: "Annonces",
+    no_players: "Aucun lecteur Music Assistant trouvé.",
+    previous: "Précédent",
+    pause: "Pause",
+    play: "Lecture",
+    next: "Suivant",
+    group_all_on: "Tout grouper sur {name}",
+    ungroup_all: "Tout dégrouper",
+    choose_target: "Choisir comme enceinte active",
+    active: "active",
+    transfer_title: "Transférer la lecture vers une autre enceinte",
+    edit_group: "Ajouter / retirer des enceintes",
+    ungroup: "Dégrouper",
+    group_dissolved: "Groupe dissous",
+    transfer_from: "Transférer la lecture de {name} vers :",
+    no_other_speaker: "Aucune autre enceinte disponible.",
+    cancel: "Annuler",
+    group: "Groupe",
+    unmute: "Réactiver le son",
+    mute: "Couper le son",
+    remove_from_group: "Retirer du groupe",
+    removed_from_group: "{name} retirée du groupe",
+    playing_with: "Enceintes jouant avec {name} :",
+    apply: "Appliquer",
+    play_on: "Lire sur",
+    refresh: "Rafraîchir",
+    loading: "Chargement…",
+    no_favorites: "Aucun favori de ce type.",
+    search_placeholder: "Artiste, album, titre, radio…",
+    all: "Tout",
+    search_hint: "Recherchez dans toutes les sources connectées à Music Assistant.",
+    no_results: "Aucun résultat pour « {query} ».",
+    queue_needs: "L'affichage de la file nécessite l'intégration « Music Assistant Queue Actions » (mass_queue, via HACS).",
+    queue_empty: "File vide.",
+    show_more: "Afficher plus ({n} restants)",
+    play_item: "Lire {name}",
+    now_playing: "Lecture : {name}",
+    play_next: "Lire ensuite",
+    will_play_next: "{name} sera lu ensuite",
+    remove_from_queue: "Retirer de la file",
+    removed_from_queue: "{name} retiré de la file",
+    everywhere: "Partout",
+    no_compatible: "Aucune enceinte compatible.",
+    saved_announcements: "Annonces enregistrées",
+    play_now: "Diffuser maintenant",
+    delete: "Supprimer",
+    no_presets: "Aucune annonce. Écrivez un message puis « Enregistrer ».",
+    message: "Message",
+    message_placeholder: "Tapez votre message…",
+    preset_name: "Nom de l'annonce",
+    volume: "Volume",
+    volume_unchanged_title: "Cliquer pour ne pas changer le volume des enceintes",
+    unchanged: "inchangé",
+    save: "Enregistrer",
+    announce: "Annoncer",
+    add_to_queue: "Ajouter à la file",
+    state_playing: "Lecture",
+    state_paused: "En pause",
+    state_idle: "Inactif",
+    state_off: "Éteint",
+    state_on: "Allumé",
+    state_buffering: "Chargement",
+    state_unavailable: "Indisponible",
+    state_unknown: "Inconnu",
+    types_playlist: "Playlists",
+    types_album: "Albums",
+    types_artist: "Artistes",
+    types_track: "Titres",
+    types_radio: "Radios",
+    types_podcast: "Podcasts",
+    types_audiobook: "Livres audio",
+    label_title: "Titre",
+    label_entities: "Enceintes (vide = toutes les enceintes Music Assistant)",
+    label_favorite_types: "Types de favoris affichés",
+    label_default_tab: "Onglet par défaut",
+    label_tts_engine: "Moteur de synthèse vocale des annonces (vide = automatique)",
+    label_announce_volume: "Volume d'annonce par défaut",
+    label_show_unavailable: "Afficher les enceintes indisponibles",
+    label_config_entry_id: "Instance Music Assistant (vide = automatique)",
+    queue_tab: "File de lecture"
+};
+
+let lang = (navigator.language || "").startsWith("fr") ? "fr" : "en";
+
+function setLang(hass) {
+    const l = hass?.locale?.language ?? hass?.language;
+    if (l) lang = l.startsWith("fr") ? "fr" : "en";
+}
+
+function tr(key, vars = {}) {
+    const text = (lang === "fr" ? fr : en)[key] ?? en[key] ?? key;
+    return text.replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? ""));
+}
+
+const hasKey = key => key in en;
+
+const schema = () => [ {
     name: "title",
     selector: {
         text: {}
@@ -1549,25 +1787,25 @@ const SCHEMA = [ {
             multiple: true,
             options: [ {
                 value: "playlist",
-                label: "Playlists"
+                label: tr("types_playlist")
             }, {
                 value: "album",
-                label: "Albums"
+                label: tr("types_album")
             }, {
                 value: "artist",
-                label: "Artistes"
+                label: tr("types_artist")
             }, {
                 value: "track",
-                label: "Titres"
+                label: tr("types_track")
             }, {
                 value: "radio",
-                label: "Radios"
+                label: tr("types_radio")
             }, {
                 value: "podcast",
-                label: "Podcasts"
+                label: tr("types_podcast")
             }, {
                 value: "audiobook",
-                label: "Livres audio"
+                label: tr("types_audiobook")
             } ]
         }
     }
@@ -1578,19 +1816,19 @@ const SCHEMA = [ {
             mode: "dropdown",
             options: [ {
                 value: "speakers",
-                label: "Enceintes"
+                label: tr("tab_speakers")
             }, {
                 value: "queue",
-                label: "File de lecture"
+                label: tr("queue_tab")
             }, {
                 value: "favorites",
-                label: "Favoris"
+                label: tr("tab_favorites")
             }, {
                 value: "search",
-                label: "Recherche"
+                label: tr("tab_search")
             }, {
                 value: "announce",
-                label: "Annonces"
+                label: tr("tab_announce")
             } ]
         }
     }
@@ -1625,28 +1863,18 @@ const SCHEMA = [ {
     }
 } ];
 
-const LABELS = {
-    title: "Titre",
-    entities: "Enceintes (vide = toutes les enceintes Music Assistant)",
-    favorite_types: "Types de favoris affichés",
-    default_tab: "Onglet par défaut",
-    tts_engine: "Moteur de synthèse vocale des annonces (vide = automatique)",
-    announce_volume: "Volume d'annonce par défaut",
-    show_unavailable: "Afficher les enceintes indisponibles",
-    config_entry_id: "Instance Music Assistant (vide = automatique)"
-};
-
 class MultiroomCardEditor extends i {
     setConfig(config) {
         this._config = config;
     }
     render() {
         if (!this.hass || !this._config) return A;
+        setLang(this.hass);
         return b`<ha-form
       .hass=${this.hass}
       .data=${this._config}
-      .schema=${SCHEMA}
-      .computeLabel=${s => LABELS[s.name] ?? s.name}
+      .schema=${schema()}
+      .computeLabel=${s => hasKey(`label_${s.name}`) ? tr(`label_${s.name}`) : s.name}
       @value-changed=${this._valueChanged}
     ></ha-form>`;
     }
@@ -1684,41 +1912,29 @@ const QUEUE_BEFORE = 5;
 
 const MEDIA_TYPES = {
     playlist: {
-        label: "Playlist",
-        plural: "Playlists",
         icon: "mdi:playlist-music"
     },
     album: {
-        label: "Album",
-        plural: "Albums",
         icon: "mdi:album"
     },
     artist: {
-        label: "Artiste",
-        plural: "Artistes",
         icon: "mdi:account-music"
     },
     track: {
-        label: "Titre",
-        plural: "Titres",
         icon: "mdi:music-note"
     },
     radio: {
-        label: "Radio",
-        plural: "Radios",
         icon: "mdi:radio"
     },
     podcast: {
-        label: "Podcast",
-        plural: "Podcasts",
         icon: "mdi:podcast"
     },
     audiobook: {
-        label: "Livre audio",
-        plural: "Livres audio",
         icon: "mdi:book-music"
     }
 };
+
+const typePlural = type => tr(`types_${type}`);
 
 const DEFAULT_FAVORITE_TYPES = [ "playlist", "album", "artist", "radio", "track" ];
 
@@ -1745,16 +1961,9 @@ const SEARCH_SECTIONS = [ {
     type: "audiobook"
 } ];
 
-const STATE_LABELS = {
-    playing: "Lecture",
-    paused: "En pause",
-    idle: "Inactif",
-    off: "Éteint",
-    on: "Allumé",
-    buffering: "Chargement",
-    unavailable: "Indisponible",
-    unknown: "Inconnu"
-};
+const KNOWN_STATES = [ "playing", "paused", "idle", "off", "on", "buffering", "unavailable", "unknown" ];
+
+const stateLabel = state => state && KNOWN_STATES.includes(state) ? tr(`state_${state}`) : state;
 
 class MultiroomCard extends i {
     constructor() {
@@ -1790,7 +1999,7 @@ class MultiroomCard extends i {
         };
     }
     setConfig(config) {
-        if (!config) throw new Error("Configuration invalide");
+        if (!config) throw new Error(tr("invalid_config"));
         this._config = {
             ...config
         };
@@ -1825,10 +2034,11 @@ class MultiroomCard extends i {
         return discoverPlayers(this.hass, !!this._config.show_unavailable);
     }
     willUpdate(changed) {
+        if (changed.has("hass")) setLang(this.hass);
         if (changed.has("hass") && this.hass && !changed.get("hass")) this._loadAnnounceData();
         if (changed.has("hass") && this.hass && !this._entryId && !changed.get("hass")) {
             findConfigEntryId(this.hass).then(id => {
-                if (id) this._entryId = id; else if (!this._config.config_entry_id) this._error = "Config entry Music Assistant introuvable : renseignez config_entry_id.";
+                if (id) this._entryId = id; else if (!this._config.config_entry_id) this._error = tr("no_config_entry");
             });
         }
     }
@@ -1859,7 +2069,9 @@ class MultiroomCard extends i {
             await action;
             if (success) this._showToast(success);
         } catch (err) {
-            this._showToast(`Erreur : ${err?.message ?? err}`);
+            this._showToast(tr("error", {
+                error: err?.message ?? err
+            }));
         }
     }
     _showToast(msg, duration = 2500) {
@@ -1879,7 +2091,9 @@ class MultiroomCard extends i {
     }
     async _transfer(source, target) {
         this._editing = undefined;
-        await this._run(transferQueue(this.hass, source.leader, target.leader), `Lecture transférée vers ${this._groupLabel(target)}`);
+        await this._run(transferQueue(this.hass, source.leader, target.leader), tr("transferred", {
+            target: this._groupLabel(target)
+        }));
         this._target = target.leader;
     }
     _toggleSelection(id) {
@@ -1894,15 +2108,15 @@ class MultiroomCard extends i {
         const ops = [];
         if (toRemove.length) ops.push(unjoin(this.hass, toRemove));
         if (toAdd.length) ops.push(join(this.hass, group.leader, toAdd));
-        if (ops.length) await this._run(Promise.all(ops), "Groupe mis à jour");
+        if (ops.length) await this._run(Promise.all(ops), tr("group_updated"));
     }
     _groupAll(target) {
         const others = this._players.filter(id => id !== target.leader && !isUnavailable(this.hass.states[id]) && supportsGrouping(this.hass.states[id]));
-        if (others.length) this._run(join(this.hass, target.leader, others), "Toutes les enceintes groupées");
+        if (others.length) this._run(join(this.hass, target.leader, others), tr("all_grouped"));
     }
     _ungroupAll(groups) {
         const members = groups.flatMap(g => g.members.filter(m => m !== g.leader));
-        if (members.length) this._run(unjoin(this.hass, members), "Enceintes dégroupées");
+        if (members.length) this._run(unjoin(this.hass, members), tr("ungrouped"));
     }
     _onVolumeInput(id, ev) {
         const value = Number(ev.target.value) / 100;
@@ -1943,7 +2157,9 @@ class MultiroomCard extends i {
             this._favorites = new Map(this._favorites).set(type, items);
             this._error = undefined;
         } catch (err) {
-            this._error = `Impossible de charger les favoris : ${err?.message ?? err}`;
+            this._error = tr("favorites_failed", {
+                error: err?.message ?? err
+            });
         } finally {
             this._favLoading = false;
         }
@@ -1972,7 +2188,9 @@ class MultiroomCard extends i {
                 this._error = undefined;
             }
         } catch (err) {
-            if (seq === this._searchSeq) this._error = `Recherche impossible : ${err?.message ?? err}`;
+            if (seq === this._searchSeq) this._error = tr("search_failed", {
+                error: err?.message ?? err
+            });
         } finally {
             if (seq === this._searchSeq) this._searching = false;
         }
@@ -1980,18 +2198,19 @@ class MultiroomCard extends i {
     async _play(item, target, enqueue, ev) {
         ev?.stopPropagation();
         if (!target) {
-            this._showToast("Aucune enceinte disponible");
+            this._showToast(tr("no_speaker_available"));
             return;
         }
         if (this._pendingUri) return;
-        const labels = {
-            play: "Lecture",
-            next: "Lu ensuite",
-            add: "Ajouté à la file"
-        };
         this._pendingUri = item.uri;
-        this._showToast(`Lancement : ${item.name}…`, 0);
-        await this._run(playMedia(this.hass, target.leader, item, enqueue), `${labels[enqueue] ?? "Lecture"} : ${item.name} · ${this._groupLabel(target)}`);
+        this._showToast(tr("launching", {
+            name: item.name
+        }), 0);
+        await this._run(playMedia(this.hass, target.leader, item, enqueue), tr("played", {
+            action: tr([ "play", "next", "add" ].includes(enqueue) ? `enqueue_${enqueue}` : "enqueue_play"),
+            name: item.name,
+            target: this._groupLabel(target)
+        }));
         this._pendingUri = undefined;
     }
     async _loadQueue(entity) {
@@ -2006,7 +2225,9 @@ class MultiroomCard extends i {
             };
             this._error = undefined;
         } catch (err) {
-            this._error = `Impossible de lire la file : ${err?.message ?? err}`;
+            this._error = tr("queue_failed", {
+                error: err?.message ?? err
+            });
         } finally {
             this._queueLoading = false;
         }
@@ -2034,7 +2255,9 @@ class MultiroomCard extends i {
             ...this._ann,
             ...patch
         };
-        saveAnnounceData(this.hass, this._ann).catch(err => this._showToast(`Enregistrement impossible : ${err?.message ?? err}`));
+        saveAnnounceData(this.hass, this._ann).catch(err => this._showToast(tr("save_failed", {
+            error: err?.message ?? err
+        })));
     }
     get _announcePlayers() {
         return this._players.filter(id => ((this.hass.states[id]?.attributes.supported_features ?? 0) & FEATURE_ANNOUNCE) !== 0);
@@ -2060,18 +2283,20 @@ class MultiroomCard extends i {
     }
     async _announce(message) {
         message = message.trim();
-        if (!message) return this._showToast("Le message est vide");
+        if (!message) return this._showToast(tr("empty_message"));
         const targets = this._ann.selected.filter(id => this._announcePlayers.includes(id) && !isUnavailable(this.hass.states[id]));
-        if (!targets.length) return this._showToast("Sélectionnez au moins une enceinte");
+        if (!targets.length) return this._showToast(tr("select_speaker"));
         const engine = this._config.tts_engine ?? defaultTtsEngine(this.hass);
-        if (!engine) return this._showToast("Aucun moteur de synthèse vocale configuré");
+        if (!engine) return this._showToast(tr("no_tts"));
         this._annSending = true;
-        await this._run(playAnnouncement(this.hass, targets, message, engine, this._ann.volume), `Annonce envoyée sur ${targets.length} enceinte${targets.length > 1 ? "s" : ""}`);
+        await this._run(playAnnouncement(this.hass, targets, message, engine, this._ann.volume), tr(targets.length > 1 ? "sent_other" : "sent_one", {
+            n: targets.length
+        }));
         this._annSending = false;
     }
     _startSavePreset() {
         const message = this._annMessage.trim();
-        if (!message) return this._showToast("Écrivez d'abord un message");
+        if (!message) return this._showToast(tr("write_first"));
         this._annName = message.slice(0, 30);
         this._annSaving = true;
     }
@@ -2085,7 +2310,9 @@ class MultiroomCard extends i {
             } ]
         });
         this._annSaving = false;
-        this._showToast(`Annonce « ${name} » enregistrée`);
+        this._showToast(tr("preset_saved", {
+            name: name
+        }));
     }
     _deletePreset(userIndex, ev) {
         ev.stopPropagation();
@@ -2106,17 +2333,17 @@ class MultiroomCard extends i {
         <div class="header">
           <div class="title">${this._config.title ?? ""}</div>
           <div class="tabs" role="tablist">
-            ${this._renderTab("speakers", "mdi:speaker-multiple", "Enceintes")}
-            ${this._renderTab("queue", "mdi:playlist-play", "File")}
-            ${this._renderTab("favorites", "mdi:heart", "Favoris")}
-            ${this._renderTab("search", "mdi:magnify", "Recherche")}
-            ${this._renderTab("announce", "mdi:bullhorn", "Annonces")}
+            ${this._renderTab("speakers", "mdi:speaker-multiple", tr("tab_speakers"))}
+            ${this._renderTab("queue", "mdi:playlist-play", tr("tab_queue"))}
+            ${this._renderTab("favorites", "mdi:heart", tr("tab_favorites"))}
+            ${this._renderTab("search", "mdi:magnify", tr("tab_search"))}
+            ${this._renderTab("announce", "mdi:bullhorn", tr("tab_announce"))}
           </div>
         </div>
         ${target ? this._renderNowPlaying(target) : A}
         <div class="content">
           ${this._error ? b`<div class="error">${this._error}</div>` : A}
-          ${players.length === 0 ? b`<div class="empty">Aucun lecteur Music Assistant trouvé.</div>` : this._tab === "speakers" ? this._renderSpeakers(groups, target) : this._tab === "queue" ? this._renderQueue(target) : this._tab === "favorites" ? this._renderFavorites(groups, target) : this._tab === "search" ? this._renderSearch(groups, target) : this._renderAnnounce()}
+          ${players.length === 0 ? b`<div class="empty">${tr("no_players")}</div>` : this._tab === "speakers" ? this._renderSpeakers(groups, target) : this._tab === "queue" ? this._renderQueue(target) : this._tab === "favorites" ? this._renderFavorites(groups, target) : this._tab === "search" ? this._renderSearch(groups, target) : this._renderAnnounce()}
         </div>
         ${this._toast ? b`<div class="toast">${this._toast}</div>` : A}
       </ha-card>
@@ -2148,7 +2375,7 @@ class MultiroomCard extends i {
       <div class="now-playing">
         ${this._art(a.entity_picture, "mdi:speaker")}
         <div class="np-text">
-          <div class="np-title">${hasMedia ? a.media_title : STATE_LABELS[s?.state ?? ""] ?? s?.state}</div>
+          <div class="np-title">${hasMedia ? a.media_title : stateLabel(s?.state)}</div>
           ${hasMedia ? b`<div class="np-sub">${[ a.media_artist, a.media_album_name ].filter(Boolean).join(" · ")}</div>` : A}
           <div class="np-target">
             <ha-icon icon="mdi:speaker-wireless"></ha-icon>${this._groupLabel(target)}
@@ -2157,21 +2384,21 @@ class MultiroomCard extends i {
         <div class="controls">
           <button
             class="icon-btn"
-            title="Précédent"
+            title=${tr("previous")}
             @click=${() => this._run(mediaCommand(this.hass, target.leader, "media_previous_track"))}
           >
             <ha-icon icon="mdi:skip-previous"></ha-icon>
           </button>
           <button
             class="icon-btn primary"
-            title=${playing ? "Pause" : "Lecture"}
+            title=${tr(playing ? "pause" : "play")}
             @click=${() => this._run(mediaCommand(this.hass, target.leader, "media_play_pause"))}
           >
             <ha-icon .icon=${playing ? "mdi:pause" : "mdi:play"}></ha-icon>
           </button>
           <button
             class="icon-btn"
-            title="Suivant"
+            title=${tr("next")}
             @click=${() => this._run(mediaCommand(this.hass, target.leader, "media_next_track"))}
           >
             <ha-icon icon="mdi:skip-next"></ha-icon>
@@ -2185,10 +2412,12 @@ class MultiroomCard extends i {
         return b`
       <div class="toolbar">
         ${target ? b`<button class="btn" @click=${() => this._groupAll(target)}>
-              <ha-icon icon="mdi:link-variant"></ha-icon>Tout grouper sur ${playerName(this.hass, target.leader)}
+              <ha-icon icon="mdi:link-variant"></ha-icon>${tr("group_all_on", {
+            name: playerName(this.hass, target.leader)
+        })}
             </button>` : A}
         ${hasGroups ? b`<button class="btn" @click=${() => this._ungroupAll(groups)}>
-              <ha-icon icon="mdi:link-variant-off"></ha-icon>Tout dégrouper
+              <ha-icon icon="mdi:link-variant-off"></ha-icon>${tr("ungroup_all")}
             </button>` : A}
       </div>
       ${groups.map(g => this._renderGroup(g, g.leader === target?.leader, groups))}
@@ -2201,21 +2430,21 @@ class MultiroomCard extends i {
         const multi = group.members.length > 1;
         const playing = leader?.state === "playing";
         const hasQueue = !!a.media_title;
-        const stateText = a.media_title ? [ a.media_title, a.media_artist ].filter(Boolean).join(" — ") : STATE_LABELS[leader?.state ?? ""] ?? leader?.state;
+        const stateText = a.media_title ? [ a.media_title, a.media_artist ].filter(Boolean).join(" — ") : stateLabel(leader?.state);
         return b`
       <div class="group ${isTarget ? "target" : ""}">
-        <div class="group-head" @click=${() => this._target = group.leader} title="Choisir comme enceinte active">
+        <div class="group-head" @click=${() => this._target = group.leader} title=${tr("choose_target")}>
           ${this._art(a.entity_picture, multi ? "mdi:speaker-multiple" : "mdi:speaker")}
           <div class="group-info">
             <div class="group-name">
-              ${this._groupLabel(group)}${isTarget ? b`<span class="badge">active</span>` : A}
+              ${this._groupLabel(group)}${isTarget ? b`<span class="badge">${tr("active")}</span>` : A}
             </div>
             <div class="group-state">${stateText}</div>
           </div>
           ${unavailable ? A : b`
                 <button
                   class="icon-btn"
-                  title=${playing ? "Pause" : "Lecture"}
+                  title=${tr(playing ? "pause" : "play")}
                   @click=${ev => {
             ev.stopPropagation();
             this._run(mediaCommand(this.hass, group.leader, "media_play_pause"));
@@ -2225,24 +2454,24 @@ class MultiroomCard extends i {
                 </button>
                 ${hasQueue ? b`<button
                       class="icon-btn ${this._isEditing(group, "transfer") ? "active" : ""}"
-                      title="Transférer la lecture vers une autre enceinte"
+                      title=${tr("transfer_title")}
                       @click=${ev => this._startEditing(group, "transfer", ev)}
                     >
                       <ha-icon icon="mdi:transfer-right"></ha-icon>
                     </button>` : A}
                 ${supportsGrouping(leader) ? b`<button
                       class="icon-btn ${this._isEditing(group, "group") ? "active" : ""}"
-                      title="Ajouter / retirer des enceintes"
+                      title=${tr("edit_group")}
                       @click=${ev => this._startEditing(group, "group", ev)}
                     >
                       <ha-icon icon="mdi:speaker-multiple"></ha-icon>
                     </button>` : A}
                 ${multi ? b`<button
                       class="icon-btn"
-                      title="Dégrouper"
+                      title=${tr("ungroup")}
                       @click=${ev => {
             ev.stopPropagation();
-            this._run(unjoin(this.hass, group.members.filter(m => m !== group.leader)), "Groupe dissous");
+            this._run(unjoin(this.hass, group.members.filter(m => m !== group.leader)), tr("group_dissolved"));
         }}
                     >
                       <ha-icon icon="mdi:link-variant-off"></ha-icon>
@@ -2265,14 +2494,16 @@ class MultiroomCard extends i {
         const targets = groups.filter(g => g.leader !== source.leader && !isUnavailable(this.hass.states[g.leader]));
         return b`
       <div class="picker">
-        <div class="picker-title">Transférer la lecture de ${this._groupLabel(source)} vers :</div>
+        <div class="picker-title">${tr("transfer_from", {
+            name: this._groupLabel(source)
+        })}</div>
         <div class="picker-list">
           ${targets.length ? targets.map(g => b`<button class="chip" @click=${() => this._transfer(source, g)}>
                   <ha-icon icon="mdi:speaker-wireless"></ha-icon>${this._groupLabel(g)}
-                </button>`) : b`<span class="picker-title">Aucune autre enceinte disponible.</span>`}
+                </button>`) : b`<span class="picker-title">${tr("no_other_speaker")}</span>`}
         </div>
         <div class="picker-actions">
-          <button class="btn" @click=${() => this._editing = undefined}>Annuler</button>
+          <button class="btn" @click=${() => this._editing = undefined}>${tr("cancel")}</button>
         </div>
       </div>
     `;
@@ -2282,7 +2513,7 @@ class MultiroomCard extends i {
         return b`
       <div class="member group-volume">
         <span class="icon-spacer"><ha-icon icon="mdi:volume-high"></ha-icon></span>
-        <span class="member-name">Groupe</span>
+        <span class="member-name">${tr("group")}</span>
         <input
           type="range"
           min="0"
@@ -2305,7 +2536,7 @@ class MultiroomCard extends i {
       <div class="member">
         <button
           class="icon-btn"
-          title=${muted ? "Réactiver le son" : "Couper le son"}
+          title=${tr(muted ? "unmute" : "mute")}
           @click=${() => this._run(mediaCommand(this.hass, id, "volume_mute", {
             is_volume_muted: !muted
         }))}
@@ -2326,8 +2557,10 @@ class MultiroomCard extends i {
         <span class="vol-value">${vol}</span>
         ${group.members.length > 1 && !isLeader ? b`<button
               class="icon-btn"
-              title="Retirer du groupe"
-              @click=${() => this._run(unjoin(this.hass, id), `${playerName(this.hass, id)} retirée du groupe`)}
+              title=${tr("remove_from_group")}
+              @click=${() => this._run(unjoin(this.hass, id), tr("removed_from_group", {
+            name: playerName(this.hass, id)
+        }))}
             >
               <ha-icon icon="mdi:close"></ha-icon>
             </button>` : group.members.length > 1 ? b`<span class="icon-spacer"></span>` : A}
@@ -2338,7 +2571,9 @@ class MultiroomCard extends i {
         const candidates = this._players.filter(id => id !== group.leader);
         return b`
       <div class="picker">
-        <div class="picker-title">Enceintes jouant avec ${playerName(this.hass, group.leader)} :</div>
+        <div class="picker-title">${tr("playing_with", {
+            name: playerName(this.hass, group.leader)
+        })}</div>
         <div class="picker-list">
           ${candidates.map(id => {
             const s = this.hass.states[id];
@@ -2355,8 +2590,8 @@ class MultiroomCard extends i {
         })}
         </div>
         <div class="picker-actions">
-          <button class="btn" @click=${() => this._editing = undefined}>Annuler</button>
-          <button class="btn primary" @click=${() => this._applyGroup(group)}>Appliquer</button>
+          <button class="btn" @click=${() => this._editing = undefined}>${tr("cancel")}</button>
+          <button class="btn primary" @click=${() => this._applyGroup(group)}>${tr("apply")}</button>
         </div>
       </div>
     `;
@@ -2366,7 +2601,7 @@ class MultiroomCard extends i {
         return b`
       <div class="target-row">
         <ha-icon icon="mdi:speaker-wireless"></ha-icon>
-        <span>Lire sur</span>
+        <span>${tr("play_on")}</span>
         <select @change=${ev => this._target = ev.target.value}>
           ${available.map(g => b`<option value=${g.leader} ?selected=${g.leader === target?.leader}>
               ${this._groupLabel(g)}
@@ -2381,13 +2616,13 @@ class MultiroomCard extends i {
       ${this._renderTargetSelect(groups, target)}
       <div class="chips">
         ${this._favoriteTypes.map(t => b`<button class="chip" aria-pressed=${this._favType === t} @click=${() => this._favType = t}>
-            <ha-icon .icon=${MEDIA_TYPES[t].icon}></ha-icon>${MEDIA_TYPES[t].plural}
+            <ha-icon .icon=${MEDIA_TYPES[t].icon}></ha-icon>${typePlural(t)}
           </button>`)}
-        <button class="icon-btn" title="Rafraîchir" @click=${() => this._loadFavorites(true)}>
+        <button class="icon-btn" title=${tr("refresh")} @click=${() => this._loadFavorites(true)}>
           <ha-icon icon="mdi:refresh"></ha-icon>
         </button>
       </div>
-      ${!this._entryId ? A : this._favLoading && !items ? b`<div class="empty">Chargement…</div>` : !items?.length ? b`<div class="empty">Aucun favori de ce type.</div>` : b`<div class="grid">${items.map(i => this._renderTile(i, target))}</div>`}
+      ${!this._entryId ? A : this._favLoading && !items ? b`<div class="empty">${tr("loading")}</div>` : !items?.length ? b`<div class="empty">${tr("no_favorites")}</div>` : b`<div class="grid">${items.map(i => this._renderTile(i, target))}</div>`}
     `;
     }
     _renderSearch(groups, target) {
@@ -2399,7 +2634,7 @@ class MultiroomCard extends i {
         <ha-icon icon="mdi:magnify"></ha-icon>
         <input
           type="search"
-          placeholder="Artiste, album, titre, radio…"
+          placeholder=${tr("search_placeholder")}
           .value=${this._query}
           @input=${this._onSearchInput}
           @keydown=${ev => {
@@ -2412,31 +2647,31 @@ class MultiroomCard extends i {
       </div>
       <div class="chips">
         <button class="chip" aria-pressed=${!this._searchType} @click=${() => this._setSearchType(undefined)}>
-          Tout
+          ${tr("all")}
         </button>
         ${types.map(t => b`<button
             class="chip"
             aria-pressed=${this._searchType === t}
             @click=${() => this._setSearchType(t)}
           >
-            <ha-icon .icon=${MEDIA_TYPES[t].icon}></ha-icon>${MEDIA_TYPES[t].plural}
+            <ha-icon .icon=${MEDIA_TYPES[t].icon}></ha-icon>${typePlural(t)}
           </button>`)}
       </div>
-      ${this._query.trim().length < 2 ? b`<div class="empty">Recherchez dans toutes les sources connectées à Music Assistant.</div>` : this._results && !sections.length && !this._searching ? b`<div class="empty">Aucun résultat pour « ${this._query} ».</div>` : sections.map(s => b`
-                <div class="section-title">${MEDIA_TYPES[s.type].plural}</div>
+      ${this._query.trim().length < 2 ? b`<div class="empty">${tr("search_hint")}</div>` : this._results && !sections.length && !this._searching ? b`<div class="empty">${tr("no_results", {
+            query: this._query
+        })}</div>` : sections.map(s => b`
+                <div class="section-title">${typePlural(s.type)}</div>
                 ${s.type === "track" ? b`<div class="list">${this._results[s.key].map(i => this._renderRow(i, target))}</div>` : b`<div class="grid">${this._results[s.key].map(i => this._renderTile(i, target))}</div>`}
               `)}
     `;
     }
     _renderQueue(target) {
         if (!hasQueueActions(this.hass)) {
-            return b`<div class="empty">
-        L'affichage de la file nécessite l'intégration « Music Assistant Queue Actions » (mass_queue, via HACS).
-      </div>`;
+            return b`<div class="empty">${tr("queue_needs")}</div>`;
         }
-        if (!target) return b`<div class="empty">Aucune enceinte disponible.</div>`;
+        if (!target) return b`<div class="empty">${tr("no_speaker_available")}.</div>`;
         const queue = this._queue?.entity === target.leader ? this._queue : undefined;
-        if (!queue) return b`<div class="empty">${this._queueLoading ? "Chargement…" : "File vide."}</div>`;
+        if (!queue) return b`<div class="empty">${tr(this._queueLoading ? "loading" : "queue_empty")}</div>`;
         const {items: items, info: info} = queue;
         const leader = this.hass.states[target.leader];
         let current = items.findIndex(i => i.queue_item_id === info?.current_item?.queue_item_id);
@@ -2449,16 +2684,18 @@ class MultiroomCard extends i {
         <ha-icon icon="mdi:speaker-wireless"></ha-icon>
         <span class="queue-title">${this._groupLabel(target)}</span>
         ${info ? b`<span class="queue-count">${position ?? "–"} / ${info.items}</span>` : A}
-        <button class="icon-btn" title="Rafraîchir" @click=${() => this._loadQueue(target.leader)}>
+        <button class="icon-btn" title=${tr("refresh")} @click=${() => this._loadQueue(target.leader)}>
           <ha-icon class=${this._queueLoading ? "spin" : ""} icon="mdi:refresh"></ha-icon>
         </button>
       </div>
       ${items.length ? b`<div class="list">
             ${items.map((item, i) => this._renderQueueRow(item, i < current ? "past" : i === current ? "current" : ""))}
-          </div>` : b`<div class="empty">File vide.</div>`}
+          </div>` : b`<div class="empty">${tr("queue_empty")}</div>`}
       ${remaining > shownAfter && this._queueAfter < 1e3 ? b`<div class="picker-actions">
             <button class="btn" @click=${() => this._queueAfter = Math.min(1e3, this._queueAfter + QUEUE_PAGE)}>
-              <ha-icon icon="mdi:chevron-down"></ha-icon>Afficher plus (${remaining - shownAfter} restants)
+              <ha-icon icon="mdi:chevron-down"></ha-icon>${tr("show_more", {
+            n: remaining - shownAfter
+        })}
             </button>
           </div>` : A}
     `;
@@ -2477,8 +2714,12 @@ class MultiroomCard extends i {
         }
         return b`<div
       class="row ${status}"
-      title=${`Lire ${item.media_title}`}
-      @click=${() => this._queueAction("play_queue_item", item, `Lecture : ${item.media_title}`)}
+      title=${tr("play_item", {
+            name: item.media_title
+        })}
+      @click=${() => this._queueAction("play_queue_item", item, tr("now_playing", {
+            name: item.media_title
+        }))}
     >
       ${art}
       <div class="row-text">
@@ -2487,15 +2728,19 @@ class MultiroomCard extends i {
       </div>
       ${status === "past" ? A : b`<button
             class="icon-btn"
-            title="Lire ensuite"
-            @click=${ev => this._queueAction("move_queue_item_next", item, `${item.media_title} sera lu ensuite`, ev)}
+            title=${tr("play_next")}
+            @click=${ev => this._queueAction("move_queue_item_next", item, tr("will_play_next", {
+            name: item.media_title
+        }), ev)}
           >
             <ha-icon icon="mdi:playlist-play"></ha-icon>
           </button>`}
       <button
         class="icon-btn"
-        title="Retirer de la file"
-        @click=${ev => this._queueAction("remove_queue_item", item, `${item.media_title} retiré de la file`, ev)}
+        title=${tr("remove_from_queue")}
+        @click=${ev => this._queueAction("remove_queue_item", item, tr("removed_from_queue", {
+            name: item.media_title
+        }), ev)}
       >
         <ha-icon icon="mdi:close"></ha-icon>
       </button>
@@ -2508,7 +2753,7 @@ class MultiroomCard extends i {
         const presets = this._presets;
         const volume = this._ann.volume;
         return b`
-      <div class="section-title">Enceintes</div>
+      <div class="section-title">${tr("tab_speakers")}</div>
       <div class="picker-list">
         ${speakers.map(id => b`<button
             class="chip"
@@ -2519,12 +2764,12 @@ class MultiroomCard extends i {
             <ha-icon icon="mdi:speaker"></ha-icon>${playerName(this.hass, id)}
           </button>`)}
         ${speakers.length > 1 ? b`<button class="chip all" aria-pressed=${allSelected} @click=${() => this._toggleAnnEverywhere(allSelected)}>
-              <ha-icon icon="mdi:home-sound-out"></ha-icon>Partout
+              <ha-icon icon="mdi:home-sound-out"></ha-icon>${tr("everywhere")}
             </button>` : A}
-        ${speakers.length ? A : b`<span class="picker-title">Aucune enceinte compatible.</span>`}
+        ${speakers.length ? A : b`<span class="picker-title">${tr("no_compatible")}</span>`}
       </div>
 
-      <div class="section-title">Annonces enregistrées</div>
+      <div class="section-title">${tr("saved_announcements")}</div>
       <div class="presets">
         ${presets.length ? presets.map(p => b`<div
                 class="preset"
@@ -2535,7 +2780,7 @@ class MultiroomCard extends i {
                 <span class="preset-name">${p.name}</span>
                 <button
                   class="icon-btn"
-                  title="Diffuser maintenant"
+                  title=${tr("play_now")}
                   ?disabled=${this._annSending}
                   @click=${ev => {
             ev.stopPropagation();
@@ -2546,18 +2791,18 @@ class MultiroomCard extends i {
                 </button>
                 ${p.userIndex !== undefined ? b`<button
                       class="icon-btn"
-                      title="Supprimer"
+                      title=${tr("delete")}
                       @click=${ev => this._deletePreset(p.userIndex, ev)}
                     >
                       <ha-icon icon="mdi:close"></ha-icon>
                     </button>` : A}
-              </div>`) : b`<span class="picker-title">Aucune annonce. Écrivez un message puis « Enregistrer ».</span>`}
+              </div>`) : b`<span class="picker-title">${tr("no_presets")}</span>`}
       </div>
 
-      <div class="section-title">Message</div>
+      <div class="section-title">${tr("message")}</div>
       <textarea
         rows="2"
-        placeholder="Tapez votre message…"
+        placeholder=${tr("message_placeholder")}
         .value=${this._annMessage}
         @input=${ev => this._annMessage = ev.target.value}
         @keydown=${ev => ev.key === "Enter" && (ev.ctrlKey || ev.metaKey) && this._announce(this._annMessage)}
@@ -2566,18 +2811,18 @@ class MultiroomCard extends i {
       ${this._annSaving ? b`<div class="save-row">
             <input
               type="text"
-              placeholder="Nom de l'annonce"
+              placeholder=${tr("preset_name")}
               .value=${this._annName}
               @input=${ev => this._annName = ev.target.value}
               @keydown=${ev => ev.key === "Enter" && this._confirmSavePreset()}
             />
             <button class="btn" @click=${this._confirmSavePreset}>OK</button>
-            <button class="btn" @click=${() => this._annSaving = false}>Annuler</button>
+            <button class="btn" @click=${() => this._annSaving = false}>${tr("cancel")}</button>
           </div>` : A}
 
       <div class="member">
         <span class="icon-spacer"><ha-icon icon="mdi:volume-high"></ha-icon></span>
-        <span class="member-name">Volume</span>
+        <span class="member-name">${tr("volume")}</span>
         <input
           type="range"
           min="0"
@@ -2592,25 +2837,25 @@ class MultiroomCard extends i {
         />
         <button
           class="vol-label"
-          title="Cliquer pour ne pas changer le volume des enceintes"
+          title=${tr("volume_unchanged_title")}
           @click=${() => this._updateAnn({
             volume: null
         })}
         >
-          ${volume == null ? "inchangé" : `${volume} %`}
+          ${volume == null ? tr("unchanged") : `${volume} %`}
         </button>
       </div>
 
       <div class="picker-actions">
         <button class="btn" @click=${this._startSavePreset}>
-          <ha-icon icon="mdi:content-save-outline"></ha-icon>Enregistrer
+          <ha-icon icon="mdi:content-save-outline"></ha-icon>${tr("save")}
         </button>
         <button
           class="btn primary"
           ?disabled=${this._annSending}
           @click=${() => this._announce(this._annMessage)}
         >
-          <ha-icon icon="mdi:bullhorn-outline"></ha-icon>Annoncer
+          <ha-icon icon="mdi:bullhorn-outline"></ha-icon>${tr("announce")}
         </button>
       </div>
     `;
@@ -2636,16 +2881,18 @@ class MultiroomCard extends i {
       <div
         class="tile ${item.media_type === "artist" ? "round" : ""} ${this._pendingClass(item)}"
         tabindex="0"
-        title=${`Lire ${item.name}`}
+        title=${tr("play_item", {
+            name: item.name
+        })}
         @click=${() => this._play(item, target, "play")}
         @keydown=${ev => ev.key === "Enter" && this._play(item, target, "play")}
       >
         ${this._itemArt(item)}
         <div class="tile-actions">
-          <button class="icon-btn" title="Lire ensuite" @click=${ev => this._play(item, target, "next", ev)}>
+          <button class="icon-btn" title=${tr("play_next")} @click=${ev => this._play(item, target, "next", ev)}>
             <ha-icon icon="mdi:playlist-play"></ha-icon>
           </button>
-          <button class="icon-btn" title="Ajouter à la file" @click=${ev => this._play(item, target, "add", ev)}>
+          <button class="icon-btn" title=${tr("add_to_queue")} @click=${ev => this._play(item, target, "add", ev)}>
             <ha-icon icon="mdi:playlist-plus"></ha-icon>
           </button>
         </div>
@@ -2659,17 +2906,19 @@ class MultiroomCard extends i {
       <div
         class="row ${this._pendingClass(item)}"
         @click=${() => this._play(item, target, "play")}
-        title=${`Lire ${item.name}`}
+        title=${tr("play_item", {
+            name: item.name
+        })}
       >
         ${this._itemArt(item)}
         <div class="row-text">
           <div class="tile-name">${item.name}</div>
           <div class="tile-sub">${itemSubtitle(item)}</div>
         </div>
-        <button class="icon-btn" title="Lire ensuite" @click=${ev => this._play(item, target, "next", ev)}>
+        <button class="icon-btn" title=${tr("play_next")} @click=${ev => this._play(item, target, "next", ev)}>
           <ha-icon icon="mdi:playlist-play"></ha-icon>
         </button>
-        <button class="icon-btn" title="Ajouter à la file" @click=${ev => this._play(item, target, "add", ev)}>
+        <button class="icon-btn" title=${tr("add_to_queue")} @click=${ev => this._play(item, target, "add", ev)}>
           <ha-icon icon="mdi:playlist-plus"></ha-icon>
         </button>
       </div>
@@ -2743,7 +2992,7 @@ if (!window.customCards.some(c => c.type === "multiroom-ma-card")) {
     window.customCards.push({
         type: "multiroom-ma-card",
         name: "Multiroom MA Card",
-        description: "Gérer, grouper et alimenter les enceintes Music Assistant.",
+        description: tr("card_description"),
         preview: false
     });
 }

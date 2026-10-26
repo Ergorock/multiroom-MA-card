@@ -11,6 +11,7 @@ export interface HomeAssistant {
   services?: Record<string, Record<string, unknown>>;
   user?: { is_admin: boolean };
   language?: string;
+  locale?: { language: string };
   callService(domain: string, service: string, data?: Record<string, any>): Promise<unknown>;
   callWS<T>(msg: Record<string, any>): Promise<T>;
   hassUrl(path?: string): string;

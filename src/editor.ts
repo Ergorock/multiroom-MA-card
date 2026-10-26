@@ -1,8 +1,9 @@
 import { LitElement, html, nothing } from "lit";
 import { property, state } from "lit/decorators.js";
 import type { HomeAssistant, MultiroomCardConfig } from "./types";
+import { hasKey, setLang, tr } from "./i18n";
 
-const SCHEMA = [
+const schema = () => [
   { name: "title", selector: { text: {} } },
   {
     name: "entities",
@@ -16,13 +17,13 @@ const SCHEMA = [
       select: {
         multiple: true,
         options: [
-          { value: "playlist", label: "Playlists" },
-          { value: "album", label: "Albums" },
-          { value: "artist", label: "Artistes" },
-          { value: "track", label: "Titres" },
-          { value: "radio", label: "Radios" },
-          { value: "podcast", label: "Podcasts" },
-          { value: "audiobook", label: "Livres audio" },
+          { value: "playlist", label: tr("types_playlist") },
+          { value: "album", label: tr("types_album") },
+          { value: "artist", label: tr("types_artist") },
+          { value: "track", label: tr("types_track") },
+          { value: "radio", label: tr("types_radio") },
+          { value: "podcast", label: tr("types_podcast") },
+          { value: "audiobook", label: tr("types_audiobook") },
         ],
       },
     },
@@ -33,11 +34,11 @@ const SCHEMA = [
       select: {
         mode: "dropdown",
         options: [
-          { value: "speakers", label: "Enceintes" },
-          { value: "queue", label: "File de lecture" },
-          { value: "favorites", label: "Favoris" },
-          { value: "search", label: "Recherche" },
-          { value: "announce", label: "Annonces" },
+          { value: "speakers", label: tr("tab_speakers") },
+          { value: "queue", label: tr("queue_tab") },
+          { value: "favorites", label: tr("tab_favorites") },
+          { value: "search", label: tr("tab_search") },
+          { value: "announce", label: tr("tab_announce") },
         ],
       },
     },
@@ -47,17 +48,6 @@ const SCHEMA = [
   { name: "show_unavailable", selector: { boolean: {} } },
   { name: "config_entry_id", selector: { config_entry: { integration: "music_assistant" } } },
 ];
-
-const LABELS: Record<string, string> = {
-  title: "Titre",
-  entities: "Enceintes (vide = toutes les enceintes Music Assistant)",
-  favorite_types: "Types de favoris affichés",
-  default_tab: "Onglet par défaut",
-  tts_engine: "Moteur de synthèse vocale des annonces (vide = automatique)",
-  announce_volume: "Volume d'annonce par défaut",
-  show_unavailable: "Afficher les enceintes indisponibles",
-  config_entry_id: "Instance Music Assistant (vide = automatique)",
-};
 
 export class MultiroomCardEditor extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
@@ -69,11 +59,12 @@ export class MultiroomCardEditor extends LitElement {
 
   protected render() {
     if (!this.hass || !this._config) return nothing;
+    setLang(this.hass);
     return html`<ha-form
       .hass=${this.hass}
       .data=${this._config}
-      .schema=${SCHEMA}
-      .computeLabel=${(s: { name: string }) => LABELS[s.name] ?? s.name}
+      .schema=${schema()}
+      .computeLabel=${(s: { name: string }) => (hasKey(`label_${s.name}`) ? tr(`label_${s.name}`) : s.name)}
       @value-changed=${this._valueChanged}
     ></ha-form>`;
   }
