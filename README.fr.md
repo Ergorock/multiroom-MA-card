@@ -15,6 +15,16 @@ Une carte Lovelace pour piloter des enceintes multiroom via [Music Assistant](ht
 
 L'interface est disponible en français et en anglais (elle suit la langue de Home Assistant).
 
+## Captures d'écran
+
+![Enceintes et groupes](https://raw.githubusercontent.com/Ergorock/multiroom-MA-card/master/images/speakers.png)
+
+![File de lecture](https://raw.githubusercontent.com/Ergorock/multiroom-MA-card/master/images/queue.png)
+
+![Annonces](https://raw.githubusercontent.com/Ergorock/multiroom-MA-card/master/images/announcements.png)
+
+![Éditeur visuel](https://raw.githubusercontent.com/Ergorock/multiroom-MA-card/master/images/editor.png)
+
 ## Installation
 
 ### HACS (dépôt personnalisé)

@@ -14,6 +14,16 @@ A Lovelace card to control multiroom speakers through [Music Assistant](https://
 - **Announcements**: broadcast a voice message to a selection of speakers (or “Everywhere”), with reusable saved announcements; the music resumes afterwards.
 - Interface in English and French (follows the Home Assistant language).
 
+## Screenshots
+
+![Speakers and groups](https://raw.githubusercontent.com/Ergorock/multiroom-MA-card/master/images/speakers.png)
+
+![Play queue](https://raw.githubusercontent.com/Ergorock/multiroom-MA-card/master/images/queue.png)
+
+![Announcements](https://raw.githubusercontent.com/Ergorock/multiroom-MA-card/master/images/announcements.png)
+
+![Visual editor](https://raw.githubusercontent.com/Ergorock/multiroom-MA-card/master/images/editor.png)
+
 ## Installation
 
 ### HACS (custom repository)
