@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Multiroom Card – démo</title>
+    <style>
+      body {
+        font-family: Roboto, system-ui, sans-serif;
+        background: #f0f0f0;
+        margin: 0;
+        padding: 24px 16px;
+        --primary-color: #03a9f4;
+        --primary-text-color: #212121;
+        --secondary-text-color: #727272;
+        --card-background-color: #fff;
+        --secondary-background-color: #f5f5f5;
+        --divider-color: rgba(0, 0, 0, 0.12);
+      }
+      body.dark {
+        background: #111;
+        --primary-text-color: #e1e1e1;
+        --secondary-text-color: #9b9b9b;
+        --card-background-color: #1c1c1c;
+        --secondary-background-color: #282828;
+        --divider-color: rgba(255, 255, 255, 0.12);
+      }
+      .wrap { max-width: 520px; margin: 0 auto; }
+      ha-card {
+        display: block;
+        background: var(--card-background-color);
+        color: var(--primary-text-color);
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      ha-icon { display: inline-flex; width: var(--mdc-icon-size, 24px); height: var(--mdc-icon-size, 24px); }
+      ha-icon svg { width: 100%; height: 100%; fill: currentColor; }
+      .bar { text-align: center; margin-bottom: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="bar"><button onclick="document.body.classList.toggle('dark')">Thème clair / sombre</button></div>
+      <multiroom-card id="card"></multiroom-card>
+    </div>
+    <script type="module">
+      // Stub de <ha-icon> : charge l'icône MDI depuis le CDN.
+      const cache = new Map();
+      customElements.define(
+        "ha-icon",
+        class extends HTMLElement {
+          static observedAttributes = ["icon"];
+          set icon(v) {
+            this._icon = v;
+            this._draw();
+          }
+          get icon() {
+            return this._icon;
+          }
+          attributeChangedCallback(_, __, v) {
+            this.icon = v;
+          }
+          async _draw() {
+            const name = (this._icon ?? "").replace("mdi:", "");
+            if (!cache.has(name))
+              cache.set(name, fetch(`https://cdn.jsdelivr.net/npm/@mdi/svg@7.4.47/svg/${name}.svg`).then((r) => r.text()));
+            const svg = await cache.get(name);
+            if ((this._icon ?? "").replace("mdi:", "") !== name) return;
+            this.style.cssText =
+              "display:inline-flex;width:var(--mdc-icon-size,24px);height:var(--mdc-icon-size,24px);flex-shrink:0";
+            this.innerHTML = svg.replace("<svg ", '<svg style="width:100%;height:100%;fill:currentColor" ');
+          }
+        },
+      );
+      customElements.define("ha-card", class extends HTMLElement {});
+
+      const speaker = (id, name, extra = {}) => ({
+        entity_id: id,
+        state: "idle",
+        last_changed: "",
+        last_updated: "",
+        attributes: {
+          friendly_name: name,
+          mass_player_type: "player",
+          group_members: [],
+          volume_level: 0.3,
+          is_volume_muted: false,
+          supported_features: 8322623,
+          ...extra,
+        },
+      });
+      const states = {
+        "media_player.beam": speaker("media_player.beam", "Salon", { volume_level: 0.18 }),
+        "media_player.era_100": speaker("media_player.era_100", "Cuisine", { volume_level: 0.25 }),
+        "media_player.pallier_2": speaker("media_player.pallier_2", "Pallier"),
+        "media_player.play": speaker("media_player.play", "Play", { volume_level: 0.4 }),
+      };
+      states["media_player.beam"].state = "playing";
+      Object.assign(states["media_player.beam"].attributes, {
+        media_title: "Get Lucky",
+        media_artist: "Daft Punk",
+        media_album_name: "Random Access Memories",
+        group_members: ["media_player.beam", "media_player.era_100"],
+      });
+      states["media_player.era_100"].attributes.group_members = ["media_player.beam", "media_player.era_100"];
+
+      const item = (type, i, name, artist) => ({
+        media_type: type,
+        uri: `library://${type}/${i}`,
+        name,
+        image: null,
+        favorite: true,
+        artists: artist ? [{ media_type: "artist", uri: "x", name: artist }] : [],
+        album: type === "track" ? { media_type: "album", uri: "y", name: "Album " + i } : null,
+      });
+      const lib = {
+        playlist: ["Chill du dimanche", "Apéro", "Running", "Focus"].map((n, i) => item("playlist", i, n)),
+        album: [
+          ["Discovery", "Daft Punk"],
+          ["Ring", "The Connells"],
+          ["Life Thru A Lens", "Robbie Williams"],
+        ].map(([n, a], i) => item("album", i, n, a)),
+        artist: ["Daft Punk", "Air", "Phoenix"].map((n, i) => item("artist", i, n)),
+        radio: ["FIP", "France Inter", "Radio Nova"].map((n, i) => item("radio", i, n)),
+        track: [
+          ["One More Time", "Daft Punk"],
+          ["Angels", "Robbie Williams"],
+        ].map(([n, a], i) => item("track", i, n, a)),
+      };
+
+      states["tts.google_translate_fr_com"] = { entity_id: "tts.google_translate_fr_com", state: "unknown", attributes: {} };
+      // Données utilisateur : annonces enregistrées précédemment avec la carte Annonce.
+      const userData = {
+        "annonce-card": { presets: [{ name: "Au bain", message: "C'est l'heure du bain !" }], selected: [], volume: 35 },
+      };
+
+      // File de lecture simulée du Salon (titre en cours : index 2).
+      const queue = {
+        current: 2,
+        items: ["Around the World", "Da Funk", "Get Lucky", "One More Time", "Harder, Better, Faster, Stronger", "Digital Love", "Instant Crush", "Lose Yourself to Dance"].map(
+          (t, i) => ({ queue_item_id: `q${i}`, media_title: t, media_artist: "Daft Punk", media_content_id: `deezer://track/${i}`, media_image: null }),
+        ),
+      };
+      states["media_player.beam"].attributes.media_content_id = "deezer://track/2";
+      const playQueueIndex = (i) => {
+        queue.current = i;
+        Object.assign(states["media_player.beam"].attributes, {
+          media_title: queue.items[i].media_title,
+          media_content_id: queue.items[i].media_content_id,
+        });
+      };
+
+      const card = document.getElementById("card");
+      const log = (...a) => console.log("[hass]", ...a);
+      const ids = (v) => (Array.isArray(v) ? v : [v]);
+      // Retire un lecteur de son groupe actuel (dissout le groupe s'il ne reste qu'un lecteur).
+      const leave = (m) => {
+        const g = states[m].attributes.group_members;
+        states[m].attributes.group_members = [];
+        const rest = g.filter((x) => x !== m);
+        for (const r of rest) states[r].attributes.group_members = rest.length > 1 ? rest : [];
+      };
+      const hass = {
+        states,
+        services: { music_assistant: {}, mass_queue: {} },
+        language: "fr",
+        user: { is_admin: true },
+        hassUrl: (p) => p,
+        async callService(domain, service, data) {
+          log(domain, service, data);
+          const id = data.entity_id;
+          if (domain === "mass_queue") {
+            const idx = queue.items.findIndex((i) => i.queue_item_id === data.queue_item_id);
+            if (service === "play_queue_item") playQueueIndex(idx);
+            else if (service === "remove_queue_item") {
+              queue.items.splice(idx, 1);
+              if (idx < queue.current) queue.current--;
+            } else if (service === "move_queue_item_next") {
+              const [it] = queue.items.splice(idx, 1);
+              if (idx < queue.current) queue.current--;
+              queue.items.splice(queue.current + 1, 0, it);
+            }
+          } else if (service === "play_announcement") {
+            // Rien à simuler : le journal suffit.
+          } else if (service === "join") {
+            const cur = states[id].attributes.group_members.length ? states[id].attributes.group_members : [id];
+            for (const m of data.group_members) if (!cur.includes(m)) leave(m);
+            const members = [...new Set([...cur, ...data.group_members])];
+            for (const m of members) states[m].attributes.group_members = members;
+          } else if (service === "unjoin") ids(id).forEach(leave);
+          else if (service === "volume_set") states[id].attributes.volume_level = data.volume_level;
+          else if (service === "volume_mute") states[id].attributes.is_volume_muted = data.is_volume_muted;
+          else if (service === "media_play_pause")
+            states[id].state = states[id].state === "playing" ? "paused" : "playing";
+          else if (service === "transfer_queue") {
+            const src = states[data.source_player];
+            const { media_title, media_artist, media_album_name } = src.attributes;
+            Object.assign(states[id].attributes, { media_title, media_artist, media_album_name });
+            states[id].state = "playing";
+            src.state = "idle";
+            delete src.attributes.media_title;
+            delete src.attributes.media_artist;
+            delete src.attributes.media_album_name;
+          } else if (service === "play_media") {
+            // Music Assistant met quelques secondes à résoudre une playlist ou un album.
+            await new Promise((r) => setTimeout(r, 2000));
+            const it = Object.values(lib).flat().find((x) => x.uri === data.media_id);
+            Object.assign(states[id].attributes, {
+              media_title: it?.name ?? data.media_id,
+              media_artist: it?.artists?.[0]?.name,
+            });
+            states[id].state = "playing";
+          }
+          card.hass = { ...hass, states: structuredClone(states) };
+        },
+        async callWS(msg) {
+          log("ws", msg);
+          await new Promise((r) => setTimeout(r, 250));
+          if (msg.type === "config_entries/get") return [{ entry_id: "demo", state: "loaded" }];
+          if (msg.type === "frontend/get_user_data") return { value: userData[msg.key] ?? null };
+          if (msg.type === "frontend/set_user_data") return void (userData[msg.key] = msg.value);
+          if (msg.service === "get_queue") {
+            const id = msg.target.entity_id;
+            return { response: { [id]: { items: queue.items.length, current_index: queue.current, current_item: queue.items[queue.current] } } };
+          }
+          if (msg.service === "get_queue_items") {
+            const { entity, limit_before, limit_after } = msg.service_data;
+            const from = Math.max(0, queue.current - limit_before);
+            return { response: { [entity]: queue.items.slice(from, queue.current + limit_after + 1) } };
+          }
+          if (msg.service === "get_library")
+            return { response: { items: lib[msg.service_data.media_type] ?? [], limit: 100, offset: 0 } };
+          if (msg.service === "search") {
+            const q = msg.service_data.name.toLowerCase();
+            const f = (t) =>
+              (lib[t] ?? []).filter((x) => (x.name + (x.artists?.[0]?.name ?? "")).toLowerCase().includes(q));
+            return {
+              response: {
+                artists: f("artist"),
+                albums: f("album"),
+                tracks: f("track"),
+                playlists: f("playlist"),
+                radio: f("radio"),
+                audiobooks: [],
+                podcasts: [],
+              },
+            };
+          }
+          throw new Error("unsupported " + msg.type);
+        },
+      };
+
+      await import("/dist/multiroom-card.js");
+      card.setConfig({
+        type: "custom:multiroom-card",
+        title: "Multiroom",
+        announcements: [{ name: "À table", message: "À table, le repas est prêt !", icon: "mdi:silverware-fork-knife" }],
+      });
+      card.hass = { ...hass, states: structuredClone(states) };
+    </script>
+  </body>
+</html>

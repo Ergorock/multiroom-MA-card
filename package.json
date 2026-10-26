@@ -1,0 +1,23 @@
+{
+  "name": "multiroom-card",
+  "version": "0.4.1",
+  "description": "Carte Lovelace multiroom pour Music Assistant",
+  "main": "dist/multiroom-card.js",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "typecheck": "tsc --noEmit"
+  },
+  "author": "Matthieu Dalion",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.3.1",
+    "lit": "^3.3.3",
+    "rollup": "^4.65.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3"
+  }
+}
