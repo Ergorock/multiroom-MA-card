@@ -5,13 +5,13 @@ import terser from "@rollup/plugin-terser";
 const dev = process.env.ROLLUP_WATCH === "true";
 
 const banner = `/*!
- * Multiroom Card
+ * Multiroom MA Card
  * Carte Lovelace pour gérer, grouper et alimenter les enceintes Music Assistant.
  */`;
 
 export default {
-  input: "src/multiroom-card.ts",
-  output: { file: "dist/multiroom-card.js", format: "es", sourcemap: dev, banner },
+  input: "src/multiroom-ma-card.ts",
+  output: { file: "dist/multiroom-ma-card.js", format: "es", sourcemap: dev, banner },
   plugins: [
     nodeResolve(),
     typescript(),

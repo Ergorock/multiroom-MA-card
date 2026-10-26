@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Multiroom Card – démo</title>
+    <title>Multiroom MA Card – démo</title>
     <style>
       body {
         font-family: Roboto, system-ui, sans-serif;
@@ -41,7 +41,7 @@
   <body>
     <div class="wrap">
       <div class="bar"><button onclick="document.body.classList.toggle('dark')">Thème clair / sombre</button></div>
-      <multiroom-card id="card"></multiroom-card>
+      <multiroom-ma-card id="card"></multiroom-ma-card>
     </div>
     <script type="module">
       // Stub de <ha-icon> : charge l'icône MDI depuis le CDN.
@@ -250,9 +250,9 @@
         },
       };
 
-      await import("/dist/multiroom-card.js");
+      await import("/dist/multiroom-ma-card.js");
       card.setConfig({
-        type: "custom:multiroom-card",
+        type: "custom:multiroom-ma-card",
         title: "Multiroom",
         announcements: [{ name: "À table", message: "À table, le repas est prêt !", icon: "mdi:silverware-fork-knife" }],
       });

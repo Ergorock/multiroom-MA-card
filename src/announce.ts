@@ -3,6 +3,7 @@ import type { AnnouncePreset, HomeAssistant } from "./types";
 /** MediaPlayerEntityFeature.MEDIA_ANNOUNCE */
 export const FEATURE_ANNOUNCE = 1048576;
 
+// Clé antérieure au renommage de la carte, conservée pour garder les réglages déjà enregistrés.
 const STORAGE_KEY = "multiroom-card-announce";
 /** Clé utilisée par la carte Annonce : ses annonces enregistrées sont reprises au premier usage. */
 const LEGACY_STORAGE_KEY = "annonce-card";

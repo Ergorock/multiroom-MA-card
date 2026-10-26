@@ -1,8 +1,8 @@
 {
-  "name": "multiroom-card",
-  "version": "0.4.1",
+  "name": "multiroom-ma-card",
+  "version": "0.5.0",
   "description": "Carte Lovelace multiroom pour Music Assistant",
-  "main": "dist/multiroom-card.js",
+  "main": "dist/multiroom-ma-card.js",
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",

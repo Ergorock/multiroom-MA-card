@@ -59,7 +59,7 @@ const LABELS: Record<string, string> = {
   config_entry_id: "Instance Music Assistant (vide = automatique)",
 };
 
-@customElement("multiroom-card-editor")
+@customElement("multiroom-ma-card-editor")
 export class MultiroomCardEditor extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
   @state() private _config?: MultiroomCardConfig;

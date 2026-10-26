@@ -4,7 +4,7 @@
 // qui vérifie les sommes CRC32 avant et après pour ne jamais enregistrer un fichier altéré.
 import { readFileSync, writeFileSync } from "node:fs";
 
-const [oldPath = ".deploy/deployed.js", newPath = "dist/multiroom-card.js"] = process.argv.slice(2);
+const [oldPath = ".deploy/deployed.js", newPath = "dist/multiroom-ma-card.js"] = process.argv.slice(2);
 const oldText = readFileSync(oldPath, "utf8");
 const newText = readFileSync(newPath, "utf8");
 

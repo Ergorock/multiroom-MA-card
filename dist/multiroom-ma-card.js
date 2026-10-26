@@ -1,5 +1,5 @@
 /*!
- * Multiroom Card
+ * Multiroom MA Card
  * Carte Lovelace pour gérer, grouper et alimenter les enceintes Music Assistant.
  */
 function __decorate(decorators, target, key, desc) {
@@ -671,6 +671,7 @@ function r(r) {
 
 const cardStyles = i$3`
   :host {
+    display: block;
     container-type: inline-size;
     --mr-radius: var(--ha-card-border-radius, 12px);
     --mr-accent: var(--primary-color, #03a9f4);
@@ -1679,9 +1680,9 @@ __decorate([ n({
 
 __decorate([ r() ], MultiroomCardEditor.prototype, "_config", void 0);
 
-MultiroomCardEditor = __decorate([ t("multiroom-card-editor") ], MultiroomCardEditor);
+MultiroomCardEditor = __decorate([ t("multiroom-ma-card-editor") ], MultiroomCardEditor);
 
-const VERSION = "0.4.1";
+const VERSION = "0.5.0";
 
 const QUEUE_PAGE = 50;
 
@@ -1787,7 +1788,7 @@ let MultiroomCard = class MultiroomCard extends i {
         this._searchSeq = 0;
     }
     static getConfigElement() {
-        return document.createElement("multiroom-card-editor");
+        return document.createElement("multiroom-ma-card-editor");
     }
     static getStubConfig() {
         return {
@@ -2031,7 +2032,7 @@ let MultiroomCard = class MultiroomCard extends i {
                 volume: data.volume ?? this._config.announce_volume ?? null
             };
         } catch (err) {
-            console.warn("multiroom-card : lecture des annonces enregistrées impossible", err);
+            console.warn("multiroom-ma-card : lecture des annonces enregistrées impossible", err);
         }
     }
     _updateAnn(patch) {
@@ -2740,17 +2741,17 @@ __decorate([ r() ], MultiroomCard.prototype, "_queueLoading", void 0);
 
 __decorate([ r() ], MultiroomCard.prototype, "_queueAfter", void 0);
 
-MultiroomCard = __decorate([ t("multiroom-card") ], MultiroomCard);
+MultiroomCard = __decorate([ t("multiroom-ma-card") ], MultiroomCard);
 
 window.customCards = window.customCards ?? [];
 
 window.customCards.push({
-    type: "multiroom-card",
-    name: "Multiroom Card",
+    type: "multiroom-ma-card",
+    name: "Multiroom MA Card",
     description: "Gérer, grouper et alimenter les enceintes Music Assistant.",
     preview: false
 });
 
-console.info(`%c MULTIROOM-CARD %c v${VERSION} `, "color:#fff;background:#03a9f4", "color:#03a9f4");
+console.info(`%c MULTIROOM-MA-CARD %c v${VERSION} `, "color:#fff;background:#03a9f4", "color:#03a9f4");
 
 export { MultiroomCard };

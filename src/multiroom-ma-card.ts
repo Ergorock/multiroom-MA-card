@@ -45,7 +45,7 @@ import type {
 } from "./types";
 import "./editor";
 
-const VERSION = "0.4.1";
+const VERSION = "0.5.0";
 
 /** Titres de file chargés à chaque « Afficher plus ». */
 const QUEUE_PAGE = 50;
@@ -86,7 +86,7 @@ const STATE_LABELS: Record<string, string> = {
   unknown: "Inconnu",
 };
 
-@customElement("multiroom-card")
+@customElement("multiroom-ma-card")
 export class MultiroomCard extends LitElement {
   static styles = cardStyles;
 
@@ -127,7 +127,7 @@ export class MultiroomCard extends LitElement {
   private _searchSeq = 0;
 
   static getConfigElement() {
-    return document.createElement("multiroom-card-editor");
+    return document.createElement("multiroom-ma-card-editor");
   }
 
   static getStubConfig(): Partial<MultiroomCardConfig> {
@@ -421,7 +421,7 @@ export class MultiroomCard extends LitElement {
       const data = await loadAnnounceData(this.hass);
       this._ann = { ...data, volume: data.volume ?? this._config.announce_volume ?? null };
     } catch (err) {
-      console.warn("multiroom-card : lecture des annonces enregistrées impossible", err);
+      console.warn("multiroom-ma-card : lecture des annonces enregistrées impossible", err);
     }
   }
 
@@ -1196,10 +1196,10 @@ declare global {
 
 window.customCards = window.customCards ?? [];
 window.customCards.push({
-  type: "multiroom-card",
-  name: "Multiroom Card",
+  type: "multiroom-ma-card",
+  name: "Multiroom MA Card",
   description: "Gérer, grouper et alimenter les enceintes Music Assistant.",
   preview: false,
 });
 
-console.info(`%c MULTIROOM-CARD %c v${VERSION} `, "color:#fff;background:#03a9f4", "color:#03a9f4");
+console.info(`%c MULTIROOM-MA-CARD %c v${VERSION} `, "color:#fff;background:#03a9f4", "color:#03a9f4");

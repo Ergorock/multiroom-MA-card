@@ -1,0 +1,2 @@
+# Fins de ligne LF partout : le correctif de déploiement compare les fichiers octet par octet.
+* text=auto eol=lf

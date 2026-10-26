@@ -2,6 +2,7 @@ import { css } from "lit";
 
 export const cardStyles = css`
   :host {
+    display: block;
     container-type: inline-size;
     --mr-radius: var(--ha-card-border-radius, 12px);
     --mr-accent: var(--primary-color, #03a9f4);
